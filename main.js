@@ -21,4 +21,7 @@ var data = [{value: 20, label: 'A'}, {value: 10, label: 'B'},{value: 25, label: 
 
 var bar = graphs.create('bar', data);
 
+bar.addValue('E', '18');
+
+
 bar.renderTo('.graph');

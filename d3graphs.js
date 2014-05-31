@@ -35,6 +35,10 @@ var graphs = (function (d3, document) {
     }
   }
 
+  Barchart.prototype.addValue = function (label, value) {
+    this.data.push({label: label, value: value});
+  };
+
   Barchart.prototype.setMargin = function ( margin ) {
     // Optionally pass new margin, calculates graph size
     if (margin) {
