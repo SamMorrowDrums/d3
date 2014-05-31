@@ -1,6 +1,3 @@
-var data = [20, 15, 17, 19, 4, 8, 15, 16, 23, 42];
-graphs.barchart(data, {selector: '.graph'});
-
 /*
 
 // We want to make a stacked bar graph
@@ -18,5 +15,10 @@ graph.addValues('Pump 6', [126, 125, 125, 126, 127]);
 graph.setColours(['red','green','blue','yellow','magenta','cyan']);
 // Actually create the graphs
 graph.renderTo(body);
-
 */
+
+var data = [{value: 20, label: 'A'}, {value: 10, label: 'B'},{value: 25, label: 'C'},{value: 30, label: 'D'}];
+
+var bar = graphs.create('bar', data);
+
+bar.renderTo('.graph');

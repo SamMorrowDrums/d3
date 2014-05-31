@@ -1,58 +1,132 @@
 var graphs = (function (d3, document) {
-  graphs = {};
+  var graphs = {};
 
   var defaults = {
-    scale: 'linear',
-    width: 1000,
+    margin: {top: 20, right: 20, bottom: 30, left: 40},
+    width: 900,
     height: 500,
+    ticks: 10,
+    yLab: "Y Axis",
+    x: function ( width ) {
+      width = width || this.width;
+      return d3.scale.ordinal()
+        .rangeRoundBands([0, width], 0.1);
+    },
+    y: function ( height ) {
+      height = height || this.height;
+      return d3.scale.linear()
+        .range([height, 0]);
+    },
+    dataX: function(d) { return d.label; },
+    dataY: function(d) { return d.value; }
   };
 
-  function size (chart, w, h) {
-    w = w || defaults.width;
-    h = h || defaults.height;
-    chart
-      .attr("width", w)
-      .attr("height", h);
+  function Barchart ( data, attrs )  {
+    //Constructor, setup defaults
+
+    this.data = data;     // Shallow copy of data, if required, a deep copy can be made (for safe mutation of original data)
+
+    for (var k in defaults) {
+      if (attrs && attrs[k] !== undefined) {
+        this[k] = attrs[k];
+      } else {
+        this[k] = defaults[k];
+      }
+    }
   }
 
-  function bars (chart, data, barWidth, y, h) {
-    h = h || defaults.height;
-    chart.selectAll("g")
-      .data(data)
-    .enter().append("g")
-      .attr("transform", function(d, i) { return "translate(" + i * barWidth + ",0)"; }  )
-    .append("rect")
-      .attr("y", function(d) { return y(d); })
-      .attr("height", function(d) { return h - y(d); })
-      .attr("width", barWidth - 1)
-    .append("text")
-      .attr("x", barWidth / 2)
-      .attr("y", function(d) { return y(d) + 3; })
-      .attr("dy", ".75em")
-      .text(function(d) { return d; });
-  }
+  Barchart.prototype.setMargin = function ( margin ) {
+    // Optionally pass new margin, calculates graph size
+    if (margin) {
+      this.margin = {
+        top: margin.top || 0,
+        right: margin.right || 0,
+        bottom: margin.bottom || 0,
+        left: margin.left || 0,
+      };
+    }
 
-  function scale (d, h, s) {
-    h = h || defaults.height;
-    s = s || defaults.scale;
+    // Return calulated dimensions
 
-    return d3.scale[s]()
-      .range([h, 0])
-      .domain([0, d3.max(d)]);
-  }
+    return {
+      width: this.width - this.margin.left - this.margin.right,
+      height: this.height - this.margin.top - this.margin.bottom
+    };
+  };
 
-  graphs.barchart  = function (data, attrs) {
-    var chart = d3.select(attrs.selector).append('svg'),
-        width = attrs.width || defaults.width,
-        barWidth = width/data.length,
-        y = scale(data, attrs.height, attrs.scale);
+  Barchart.prototype.setAxis = function (x, y) {
+    // Set axis functions based on scale functions
+    x = x || this.x();
+    y = y || this.y();
+    var ticks = this.ticks;
+    return {
+      xAxis: d3.svg.axis()
+      .scale(x)
+      .orient("bottom"),
 
-    chart.attr('class', 'chart');
+      yAxis: d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(this.ticks)
+    };
+  };
 
-    size(chart, attrs.width, attrs.height);
-    bars (chart, data, barWidth, y, attrs.height);
+  Barchart.prototype.renderTo = function ( selector ) {
+      var calc = this.setMargin,
+      that = this;
+      x = this.x();
+      y = this.y();
 
-    return chart;
+      var chart = this.chart = d3.select( selector ).append('svg')
+            .attr("width", calc.width)
+            .attr("height", calc.height)
+          .append("g")
+            .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+
+     x.domain(that.data.map(this.dataX));
+     y.domain([0, d3.max(this.data, this.dataY)]);
+
+     var axis = this.setAxis(x, y);
+     var yLab = this.yLab;
+
+     chart.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + this.height + ")")
+      .call(axis.xAxis);
+
+      chart.append("g")
+        .attr("class", "y axis")
+        .call(axis.yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6  )
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text(yLab);
+
+      var height = this.height;
+      chart.selectAll(".bar")
+          .data(this.data)
+        .enter().append("rect")
+          .attr("class", "bar")
+          .attr("x", function(d) { return x(d.label); })
+          .attr("width", x.rangeBand())
+          .attr("y", function(d) { return y(d.value); })
+          .attr("height", function(d) { return height - y(d.value); });
+  };
+
+  // Registry of names to call them
+
+  var types = {
+    bar: Barchart,
+    stacked: ''
+  };
+
+  // Exports
+
+  graphs.create = function ( type, data, attrs ) {
+    data = data || [];
+    return new types[type](data, attrs);
   };
   
   return graphs;
