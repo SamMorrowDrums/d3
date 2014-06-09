@@ -77,9 +77,9 @@ var graphs = (function (d3, document) {
 
   Barchart.prototype.renderTo = function ( selector ) {
       var calc = this.setMargin,
-      that = this;
-      x = this.x();
-      y = this.y();
+          that = this,
+          x = this.x(),
+          y = this.y();
 
       var chart = this.chart = d3.select( selector ).append('svg')
             .attr("width", calc.width)
@@ -97,7 +97,6 @@ var graphs = (function (d3, document) {
       .attr("class", "x axis")
       .attr("transform", "translate(0," + this.height + ")")
       .call(axis.xAxis);
-
       chart.append("g")
         .attr("class", "y axis")
         .call(axis.yAxis)
@@ -113,7 +112,15 @@ var graphs = (function (d3, document) {
           .data(this.data)
         .enter().append("rect")
           .attr("class", "bar")
+          .attr("width", 0)
+          .attr("rx", 5)
+          .attr("ry", 5)
           .attr("x", function(d) { return x(d.label); })
+          .transition()
+          .delay(function (d, i) {
+              return 250 + 50 * i;
+          })
+          .duration(500)
           .attr("width", x.rangeBand())
           .attr("y", function(d) { return y(d.value); })
           .attr("height", function(d) { return height - y(d.value); });
