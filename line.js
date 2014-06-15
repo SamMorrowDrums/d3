@@ -21,6 +21,7 @@ graphs = (function (d3, graphs, document) {
     dataX: function(d, i) { return this.period[i]; },
     dataY: function(d) { return d.values; },
     maxY: function (d) {return d3.max(d.values);},
+    minY: function (d) {return d3.min(d.values);},
     period: [1,2,3,4,5,6,7,8,9]
   };
 
@@ -91,7 +92,7 @@ graphs = (function (d3, graphs, document) {
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
      x.domain(that.data.map(this.dataX  ));
-     y.domain([0, d3.max(this.data, this.maxY)]);
+     y.domain([d3.min(this.data, this.minY), d3.max(this.data, this.maxY)]);
 
      var axis = this.setAxis(x, y);
      var yLab = this.yLab;
@@ -113,17 +114,18 @@ graphs = (function (d3, graphs, document) {
       var height = this.height;
       var line = d3.svg.line()
         .x(function(d,i) { return x(that.period[i]); })
-        .y(function(d) { console.log(d); console.log(y(d)); return -1 * y(d); });
+        .y(function(d) { return y(d); });
 
       
         chart.selectAll('.linePath')
         .data(this.data)
       .enter().append('path')
+
       .attr('d', function (d) {
           return line(d.values);
         })
         .attr('class', 'linePath')
-        .attr('fill', function(d, i) {return that.color(i); } );
+        .attr('stroke', function(d, i) {return that.color(i); } );
 
   };
 

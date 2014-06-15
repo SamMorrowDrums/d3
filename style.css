@@ -8,6 +8,7 @@ body {
 
 .linePath {
   stroke-width: 2;
+  fill: none;
 }
 
 .bar:hover, .slice:hover path {
