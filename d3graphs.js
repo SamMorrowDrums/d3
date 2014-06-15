@@ -1,8 +1,7 @@
-var graphs = (function (d3, document) {
-  var graphs = {};
-
+var graphs = graphs || {};
+graphs = (function (d3, graphs, document) {
   var defaults = {
-    margin: {top: 20, right: 20, bottom: 30, left: 40},
+    margin: {top: 10, right: 20, bottom: 10, left: 40},
     width: 900,
     height: 500,
     ticks: 10,
@@ -128,17 +127,17 @@ var graphs = (function (d3, document) {
 
   // Registry of names to call them
 
-  var types = {
+  graphs.types = {
     bar: Barchart,
-    stacked: ''
+    stacked: '',
   };
 
   // Exports
 
   graphs.create = function ( type, data, attrs ) {
     data = data || [];
-    return new types[type](data, attrs);
+    return new graphs.types[type](data, attrs);
   };
   
   return graphs;
-})(d3, document);
+})(d3, graphs, document);

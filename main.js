@@ -17,11 +17,20 @@ graph.setColours(['red','green','blue','yellow','magenta','cyan']);
 graph.renderTo(body);
 */
 
+// Bar
+
 var data = [{value: 20, label: 'A'}, {value: 10, label: 'B'},{value: 25, label: 'C'},{value: 30, label: 'D'}];
-
 var bar = graphs.create('bar', data);
-
 bar.addValue('E', '18');
 
-
 bar.renderTo('.graph');
+
+//Pie
+
+var pdata = [{label:'First', value:20}, {label:'Second', value:50}, {label:'Third', value:30}];
+var pie = graphs.create('pie', pdata);
+
+pie.addValue('Fourth', 27);
+
+
+pie.renderTo('.pie');

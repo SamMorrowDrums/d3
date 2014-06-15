@@ -1,13 +1,17 @@
+body {
+  font: 14px sans-serif;
+}
+
 .bar {
   fill: steelblue;
 }
 
-.bar:hover {
+.bar:hover, .slice:hover path {
   fill: brown;
 }
 
 .axis {
-  font: 10px sans-serif;
+  font-size: 10px;
 }
 
 .axis path,
@@ -47,4 +51,4 @@
    margin: -1px 0 0 0;
    top: 100%;
    left: 0;
-}}
+}
