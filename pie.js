@@ -12,7 +12,7 @@ graphs = (function (d3, graphs, document) {
     //Constructor, setup defaults
 
     this.data = data;     // Shallow copy of data, if required, a deep copy can be made (for safe mutation of original data)
-
+    console.log(data);
     for (var k in defaults) {
       if (attrs && attrs[k] !== undefined) {
         this[k] = attrs[k];
@@ -43,14 +43,14 @@ graphs = (function (d3, graphs, document) {
         .value(function(d) { return d.value; });
 
 
-    var arcs = chart.selectAll('g.slice')     //this selects all <g> elements with class slice (there aren't any yet)
+    var arcs = chart.selectAll('g.slice')    //this selects all <g> elements with class slice (there aren't any yet)
         .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
         .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
             .append('g')                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
                 .attr('class', 'slice');    //allow us to style things in the slices (like text)
 
         arcs.append('path')
-                .attr('fill', function(d, i) {console.log(d); return that.color(i); } ) //set the color for each slice to be chosen from the color function defined above
+                .attr('fill', function(d, i) {return that.color(i); } ) //set the color for each slice to be chosen from the color function defined above
                 .attr('d', arc)                                   //this creates the actual SVG path using the associated data (pie) with the arc drawing function
                 .attr('class');
 
@@ -63,7 +63,7 @@ graphs = (function (d3, graphs, document) {
                 return 'translate(' + arc.centroid(d) + ')';        //this gives us a pair of coordinates like [50, 50]
             })
             .attr('text-anchor', 'middle')                          //center the text on it's origin
-            .text(function(d, i) { return that.data[i].label; });
+            .text(function(d, i) { return d.data.label; });
   };
 
   //export

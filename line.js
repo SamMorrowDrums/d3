@@ -1,26 +1,30 @@
 var graphs = graphs || {};
 graphs = (function (d3, graphs, document) {
+
   var defaults = {
     margin: {top: 10, right: 20, bottom: 10, left: 40},
     width: 900,
     height: 500,
     ticks: 10,
+    color: d3.scale.category20c(),
     yLab: "Y Axis",
     x: function ( width ) {
       width = width || this.width;
       return d3.scale.ordinal()
-        .rangeRoundBands([0, width], 0.1);
+        .rangePoints([0, width], 0.1);
     },
     y: function ( height ) {
       height = height || this.height;
       return d3.scale.linear()
         .range([height, 0]);
     },
-    dataX: function(d) { return d.label; },
-    dataY: function(d) { return d.value; }
+    dataX: function(d, i) { return this.period[i]; },
+    dataY: function(d) { return d.values; },
+    maxY: function (d) {return d3.max(d.values);},
+    period: [1,2,3,4,5,6,7,8,9]
   };
 
-  function Barchart ( data, attrs )  {
+  function Line ( data, attrs )  {
     //Constructor, setup defaults
 
     this.data = data;     // Shallow copy of data, if required, a deep copy can be made (for safe mutation of original data)
@@ -34,11 +38,11 @@ graphs = (function (d3, graphs, document) {
     }
   }
 
-  Barchart.prototype.addValue = function (label, value) {
-    this.data.push({label: label, value: value});
+  Line.prototype.addValues = function (label, values) {
+    this.data.push({label: label, values: values});
   };
 
-  Barchart.prototype.setMargin = function ( margin ) {
+  Line.prototype.setMargin = function ( margin ) {
     // Optionally pass new margin, calculates graph size
     if (margin) {
       this.margin = {
@@ -57,7 +61,7 @@ graphs = (function (d3, graphs, document) {
     };
   };
 
-  Barchart.prototype.setAxis = function (x, y) {
+  Line.prototype.setAxis = function (x, y) {
     // Set axis functions based on scale functions
     x = x || this.x();
     y = y || this.y();
@@ -74,7 +78,7 @@ graphs = (function (d3, graphs, document) {
     };
   };
 
-  Barchart.prototype.renderTo = function ( selector ) {
+  Line.prototype.renderTo = function ( selector ) {
       var calc = this.setMargin,
           that = this,
           x = this.x(),
@@ -86,8 +90,8 @@ graphs = (function (d3, graphs, document) {
           .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-     x.domain(that.data.map(this.dataX));
-     y.domain([0, d3.max(this.data, this.dataY)]);
+     x.domain(that.data.map(this.dataX  ));
+     y.domain([0, d3.max(this.data, this.maxY)]);
 
      var axis = this.setAxis(x, y);
      var yLab = this.yLab;
@@ -107,36 +111,26 @@ graphs = (function (d3, graphs, document) {
         .text(yLab);
 
       var height = this.height;
-      chart.selectAll(".bar")
-          .data(this.data)
-        .enter().append("rect")
-          .attr("class", "bar")
-          .attr("width", 0)
-          .attr("rx", 5)
-          .attr("ry", 5)
-          .attr("x", function(d) { return x(d.label); })
-          .transition()
-          .delay(function (d, i) {
-              return 250 + 50 * i;
-          })
-          .duration(500)
-          .attr("width", x.rangeBand())
-          .attr("y", function(d) { return y(d.value); })
-          .attr("height", function(d) { return height - y(d.value); });
+      var line = d3.svg.line()
+        .x(function(d,i) { return x(that.period[i]); })
+        .y(function(d) { console.log(d); console.log(y(d)); return -1 * y(d); });
+
+      
+        chart.selectAll('.linePath')
+        .data(this.data)
+      .enter().append('path')
+      .attr('d', function (d) {
+          return line(d.values);
+        })
+        .attr('class', 'linePath')
+        .attr('fill', function(d, i) {return that.color(i); } );
+
   };
 
-  // Registry of names to call them
+  //export
 
-  graphs.types = {
-    bar: Barchart,
-  };
+  graphs.types.line = Line;
 
-  // Exports
-
-  graphs.create = function ( type, data, attrs ) {
-    data = data || [];
-    return new graphs.types[type](data, attrs);
-  };
   
   return graphs;
 })(d3, graphs, document);

@@ -21,16 +21,27 @@ graph.renderTo(body);
 
 var data = [{value: 20, label: 'A'}, {value: 10, label: 'B'},{value: 25, label: 'C'},{value: 30, label: 'D'}];
 var bar = graphs.create('bar', data);
+
 bar.addValue('E', '18');
 
 bar.renderTo('.graph');
 
 //Pie
 
-var pdata = [{label:'First', value:20}, {label:'Second', value:50}, {label:'Third', value:30}];
-var pie = graphs.create('pie', pdata);
+var pie = graphs.create('pie', data);
 
-pie.addValue('Fourth', 27);
-
+pie.addValue('F', 27);
 
 pie.renderTo('.pie');
+
+// Line
+
+var lineData = [{label: 'Pump 1', values: [125, 124, 126, 122, 126]}, {label: 'Pump 2', values: [124, 124, 123, 122, 121]}];
+var period = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+var line = graphs.create('line', lineData, {period: period});
+line.addValues('Pump 3', [124, 125, 124, 123, 125]);
+line.addValues('Pump 4', [125, 126, 124, 125, 123]);
+line.addValues('Pump 5', [123, 123, 122, 123, 124]);
+line.addValues('Pump 6', [10, 50, 55, 45, 20]);
+
+line.renderTo('.line');
