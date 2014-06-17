@@ -101,7 +101,7 @@ graphs = (function (d3, graphs, document) {
         .call(axis.yAxis)
       .append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 6  )
+        .attr("y", 6 )
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text(yLab);

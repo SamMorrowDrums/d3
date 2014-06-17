@@ -97,7 +97,7 @@ graphs = (function (d3, graphs, document) {
      var axis = this.setAxis(x, y);
      var yLab = this.yLab;
 
-     chart.append("g")
+    chart.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + this.height + ")")
       .call(axis.xAxis);
@@ -111,18 +111,20 @@ graphs = (function (d3, graphs, document) {
         .style("text-anchor", "end")
         .text(yLab);
 
-      var height = this.height;
-      var line = d3.svg.line()
-        .x(function(d,i) { return x(that.period[i]); })
-        .y(function(d) { return y(d); });
+    var height = this.height;
+    var line = d3.svg.line()
+      .x(function(d,i) {return x(that.period[i]); })
+      .y(function(d) { return y(d); });
 
-      
-        chart.selectAll('.linePath')
+    
+    chart.selectAll('.linePath')
         .data(this.data)
       .enter().append('path')
-
       .attr('d', function (d) {
-          return line(d.values);
+          var l = line(d.values);
+          console.log(d.values);
+          console.log(l);
+          return l;
         })
         .attr('class', 'linePath')
         .attr('stroke', function(d, i) {return that.color(i); } );

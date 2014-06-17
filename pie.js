@@ -4,8 +4,7 @@ graphs = (function (d3, graphs, document) {
   var defaults = {
     width: 300,
     height: 300,
-    color: d3.scale.category20c(),
-    radius: 100
+    color: d3.scale.category20c()
   };
 
   function Pie ( data, attrs )  {
@@ -20,6 +19,7 @@ graphs = (function (d3, graphs, document) {
         this[k] = defaults[k];
       }
     }
+    this.radius = d3.min([this.width, this.height]) / 2;
   }
 
   Pie.prototype.addValue = function (label, value) {
