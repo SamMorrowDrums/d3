@@ -11,7 +11,6 @@ graphs = (function (d3, graphs, document) {
     //Constructor, setup defaults
 
     this.data = data;     // Shallow copy of data, if required, a deep copy can be made (for safe mutation of original data)
-    console.log(data);
     for (var k in defaults) {
       if (attrs && attrs[k] !== undefined) {
         this[k] = attrs[k];
