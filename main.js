@@ -41,7 +41,6 @@ var period = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
 var line = graphs.create('line', lineData, {period: period});
 line.addValues('Pump 3', [124, 125, 124, 123, 125]);
 line.addValues('Pump 4', [125, 126, 124, 125, 123]);
-line.addValues('Pump 5', [123, 123, 122, 123, 124]);
-line.addValues('Pump 6', [126, 125, 125, 126, 127]);
+
 
 line.renderTo('.line');

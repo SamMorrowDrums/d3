@@ -91,7 +91,7 @@ graphs = (function (d3, graphs, document) {
           .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-     x.domain(that.data.map(this.dataX  ));
+     x.domain(that.period.map(this.dataX  ));
      y.domain([d3.min(this.data, this.minY), d3.max(this.data, this.maxY)]);
 
      var axis = this.setAxis(x, y);
