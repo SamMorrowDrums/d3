@@ -22,7 +22,8 @@ graphs = (function (d3, graphs, document) {
     dataY: function(d) { return d.values; },
     maxY: function (d) {return d3.max(d.values);},
     minY: function (d) {return d3.min(d.values);},
-    period: [1,2,3,4,5,6,7,8,9]
+    period: null,
+    interpolate: null
   };
 
   function Line ( data, attrs )  {
@@ -97,6 +98,7 @@ graphs = (function (d3, graphs, document) {
      var axis = this.setAxis(x, y);
      var yLab = this.yLab;
 
+
     chart.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + this.height + ")")
@@ -115,6 +117,10 @@ graphs = (function (d3, graphs, document) {
     var line = d3.svg.line()
       .x(function(d,i) {return x(that.period[i]); })
       .y(function(d) { return y(d); });
+
+    if (this.interpolate) {
+      line = line.interpolate(this.interpolate);
+    }
 
     
     chart.selectAll('.linePath')
