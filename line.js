@@ -121,10 +121,7 @@ graphs = (function (d3, graphs, document) {
         .data(this.data)
       .enter().append('path')
       .attr('d', function (d) {
-          var l = line(d.values);
-          console.log(d.values);
-          console.log(l);
-          return l;
+          return line(d.values);
         })
         .attr('class', 'linePath')
         .attr('stroke', function(d, i) {return that.color(i); } );
