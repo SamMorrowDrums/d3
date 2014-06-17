@@ -19,18 +19,18 @@ graph.renderTo(body);
 
 // Bar
 
-var data = [{value: 20, label: 'A'}, {value: 10, label: 'B'},{value: 25, label: 'C'},{value: 30, label: 'D'}];
+var data = [{value: 20, label: 'Pump 1'}, {value: 10, label: 'Pump 2'},{value: 25, label: 'Pump 3'},{value: 30, label: 'Pump 4'}];
 var bar = graphs.create('bar', data);
 
-bar.addValue('E', '18');
+bar.addValue('Pump 5', '18');
 
 bar.renderTo('.graph');
 
 //Pie
 
-var pie = graphs.create('pie', data);
+var pie = graphs.create('pie', data, {width: 600, height: 600});
 
-pie.addValue('F', 27);
+pie.addValue('Pump 6', 27);
 
 pie.renderTo('.pie');
 
