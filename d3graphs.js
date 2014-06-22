@@ -5,6 +5,13 @@ graphs = (function (d3, graphs, document) {
     width: 900,
     height: 500,
     ticks: 10,
+    tip: d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html(function (d) {
+          return "<b>Power:</b> " + d.value + "<br/>" +
+                  "<b>Flow:</b> " + d.label + "<br/>";
+    }),
     yLab: "Y Axis",
     x: function ( width ) {
       width = width || this.width;
@@ -86,6 +93,8 @@ graphs = (function (d3, graphs, document) {
           .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
+    chart.call(this.tip);
+
      x.domain(that.data.map(this.dataX));
      y.domain([0, d3.max(this.data, this.dataY)]);
 
@@ -110,6 +119,8 @@ graphs = (function (d3, graphs, document) {
       chart.selectAll(".bar")
           .data(this.data)
         .enter().append("rect")
+        .on('mouseover', this.tip.show)
+          .on('mouseout', this.tip.hide)
           .attr("class", "bar")
           .attr("width", 0)
           .attr("rx", 5)
