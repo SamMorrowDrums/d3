@@ -138,7 +138,7 @@ graphs = (function (d3, graphs, document) {
     }
 
     
-    chart.selectAll('.linePath')
+    var path = chart.selectAll('.linePath')
         .data(this.data)
       .enter().append('path')
       .attr('d', function (d) {
@@ -148,6 +148,13 @@ graphs = (function (d3, graphs, document) {
         .attr('stroke', function(d, i) {return that.colour(i); } );
 
     chart.call(this.tip);
+
+    var lineLen = path.node().getTotalLength();
+    path.attr("stroke-dasharray", lineLen + ", "+lineLen)
+        .attr("stroke-dashoffset",lineLen);
+   path.transition()
+        .duration(2000)
+        .attr("stroke-dashoffset", 0);
 
 
     function addDots(d, i) {
@@ -160,6 +167,9 @@ graphs = (function (d3, graphs, document) {
       .enter().append("circle")
       .on('mouseover', that.tip.show)
           .on('mouseout', that.tip.hide)
+          .attr("r", 0)
+          .transition()
+        .duration(2000)
           .attr("r", 3.5)
           .attr("cx", function(d, i) { return x(that.period[i]);})
           .attr("cy", function(d) { return y(d.value); })
