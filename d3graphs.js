@@ -1,7 +1,7 @@
 var graphs = graphs || {};
 graphs = (function (d3, graphs, document) {
   var defaults = {
-    margin: {top: 10, right: 20, bottom: 10, left: 40},
+    margin: {top: 55, right: 20, bottom: 10, left: 40},
     width: 900,
     height: 500,
     ticks: 10,

@@ -32,7 +32,7 @@ body {
 }
 
 .dot:hover {
-  stroke-width: 8;
+  stroke-width: 6;
 }
 
 .x.axis path {
