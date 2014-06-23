@@ -6,7 +6,7 @@ graphs = (function (d3, graphs, document) {
     width: 900,
     height: 500,
     ticks: 10,
-    color: d3.scale.category20c(),
+    colour: graphs.getColours,
     yLab: "Y Axis",
     x: function ( width ) {
       width = width || this.width;
@@ -48,6 +48,14 @@ graphs = (function (d3, graphs, document) {
   }
 
   Line.prototype.addValues = function (label, values) {
+    this.data.push({label: label, values: values});
+  };
+
+  Line.prototype.setColours = function (colours) {
+    this.colours = colours;
+  };
+
+  Line.prototype.setPeriod = function (period) {
     this.data.push({label: label, values: values});
   };
 
@@ -137,7 +145,7 @@ graphs = (function (d3, graphs, document) {
           return line(d.values);
         })
         .attr('class', 'linePath')
-        .attr('stroke', function(d, i) {return that.color(i); } );
+        .attr('stroke', function(d, i) {return that.colour(i); } );
 
     chart.call(this.tip);
 
@@ -155,11 +163,8 @@ graphs = (function (d3, graphs, document) {
           .attr("r", 3.5)
           .attr("cx", function(d, i) { return x(that.period[i]);})
           .attr("cy", function(d) { return y(d.value); })
-          .attr('fill', function() {return that.color(i); } )
-          .attr('stroke', function() {return that.color(i); } );
-      
-      
-        
+          .attr('fill', function() {return that.colour(i); } )
+          .attr('stroke', function() {return that.colour(i); } );
       return d;
 
     }

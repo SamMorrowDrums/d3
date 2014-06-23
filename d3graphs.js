@@ -1,10 +1,18 @@
 var graphs = graphs || {};
 graphs = (function (d3, graphs, document) {
+  graphs.colours = ['red','green','blue','yellow','magenta','cyan', 'steelblue'];
+  graphs.getColours = function (i) {
+    if (this.colours !== undefined) {
+      return this.colours[i%this.colours.length];
+    }
+    return graphs.colours[i%graphs.colours.length];
+  };
   var defaults = {
     margin: {top: 55, right: 20, bottom: 10, left: 40},
     width: 900,
     height: 500,
     ticks: 10,
+    colour: graphs.getColours,
     tip: d3.tip()
       .attr('class', 'd3-tip')
       .offset([-10, 0])
@@ -43,6 +51,10 @@ graphs = (function (d3, graphs, document) {
 
   Barchart.prototype.addValue = function (label, value) {
     this.data.push({label: label, value: value});
+  };
+
+  Barchart.prototype.setColours = function (colours) {
+    this.colours = colours;
   };
 
   Barchart.prototype.setMargin = function ( margin ) {
@@ -125,6 +137,7 @@ graphs = (function (d3, graphs, document) {
           .attr("width", 0)
           .attr("rx", 5)
           .attr("ry", 5)
+          .attr('fill', this.colour(1))
           .attr("x", function(d) { return x(d.label); })
           .transition()
           .delay(function (d, i) {

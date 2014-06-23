@@ -4,14 +4,21 @@ graphs = (function (d3, graphs, document) {
   var defaults = {
     width: 300,
     height: 300,
-    color: d3.scale.category20c(),
+    getData: function (d) {
+      return d.data;
+    },
+    getLabel: function (d) {
+      return d.data;
+    },
+    color: graphs.getColours,
     tip: d3.tip()
       .attr('class', 'd3-tip')
-      .offset([-10, 0])
-      .html(function (d) {
-          return "<b>label:</b> " + d.data. label + "<br/>" +
-          "<b>Value:</b> " + d.value + "<br/>";
-    })
+      .offset([-10, 0]),
+    tipHTML: function (d) {
+      return "<b>" + d.data.label + "</b> <br/>" +
+      "<b>Value:</b> " + d.data.value + "<br/>";
+    }
+  
   };
 
   function Pie ( data, attrs )  {
@@ -26,10 +33,15 @@ graphs = (function (d3, graphs, document) {
       }
     }
     this.radius = d3.min([this.width, this.height]) / 2;
+    this.tip = this.tip.html(this.tipHTML);
   }
 
   Pie.prototype.addValue = function (label, value) {
     this.data.push({label: label, value: value});
+  };
+
+  Pie.prototype.setColours = function (colours) {
+    this.colours = colours;
   };
 
   Pie.prototype.renderTo = function ( selector ) {
@@ -40,6 +52,7 @@ graphs = (function (d3, graphs, document) {
             .attr("height", this.height)
           .append("g")
             .attr("transform", "translate(" + this.radius + "," + this.radius + ")");
+    
     chart.call(this.tip);
 
     var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
