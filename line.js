@@ -155,9 +155,10 @@ graphs = (function (d3, graphs, document) {
           .attr("r", 3.5)
           .attr("cx", function(d, i) { return x(that.period[i]);})
           .attr("cy", function(d) { return y(d.value); })
-          .attr('class', 'dot')
           .attr('fill', function() {return that.color(i); } )
-          .attr('stroke', function() { return that.color(i); } );
+          .attr('stroke', function() {return that.color(i); } );
+      
+      
         
       return d;
 
