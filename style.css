@@ -9,6 +9,11 @@ body {
 .linePath {
   stroke-width: 2;
   fill: none;
+  stroke-opacity: 0.5;
+}
+
+.linePath:hover {
+  stroke-opacity: 1.0;
 }
 
 .bar:hover, .slice:hover path {
@@ -23,7 +28,11 @@ body {
 .axis line {
   fill: none;
   stroke: #000;
-  shape-rendering: crispEdges;
+  shape-rendering: crispEdges;  
+}
+
+.dot:hover {
+  stroke-width: 8;
 }
 
 .x.axis path {

@@ -4,7 +4,14 @@ graphs = (function (d3, graphs, document) {
   var defaults = {
     width: 300,
     height: 300,
-    color: d3.scale.category20c()
+    color: d3.scale.category20c(),
+    tip: d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html(function (d) {
+          return "<b>label:</b> " + d.data. label + "<br/>" +
+          "<b>Value:</b> " + d.value + "<br/>";
+    })
   };
 
   function Pie ( data, attrs )  {
@@ -33,7 +40,7 @@ graphs = (function (d3, graphs, document) {
             .attr("height", this.height)
           .append("g")
             .attr("transform", "translate(" + this.radius + "," + this.radius + ")");
-
+    chart.call(this.tip);
 
     var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
         .outerRadius(this.radius);
@@ -44,8 +51,10 @@ graphs = (function (d3, graphs, document) {
 
     var arcs = chart.selectAll('g.slice')    //this selects all <g> elements with class slice (there aren't any yet)
         .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
-        .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+        .enter()                           //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
             .append('g')                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+            .on('mouseover', this.tip.show)
+          .on('mouseout', this.tip.hide)
                 .attr('class', 'slice');    //allow us to style things in the slices (like text)
 
         arcs.append('path')

@@ -9,8 +9,8 @@ graphs = (function (d3, graphs, document) {
       .attr('class', 'd3-tip')
       .offset([-10, 0])
       .html(function (d) {
-          return "<b>Power:</b> " + d.value + "<br/>" +
-                  "<b>Flow:</b> " + d.label + "<br/>";
+          return "<b>Label:</b> " + d.label + "<br/>" +
+          "<b>Value:</b> " + d.value + "<br/>";
     }),
     yLab: "Y Axis",
     x: function ( width ) {

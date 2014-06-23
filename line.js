@@ -23,7 +23,14 @@ graphs = (function (d3, graphs, document) {
     maxY: function (d) {return d3.max(d.values);},
     minY: function (d) {return d3.min(d.values);},
     period: null,
-    interpolate: null
+    interpolate: null,
+    tip: d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html(function (d) {
+          return "<b>Label:</b> " + d.label + "<br/>" +
+          "<b>Value:</b> " + d.value + "<br/>";
+    })
   };
 
   function Line ( data, attrs )  {
@@ -131,6 +138,38 @@ graphs = (function (d3, graphs, document) {
         })
         .attr('class', 'linePath')
         .attr('stroke', function(d, i) {return that.color(i); } );
+
+    chart.call(this.tip);
+
+
+    function addDots(d, i) {
+      var labels = [];
+        for (var n in d.values) {
+          labels.push({value: d.values[n], label: d.label});
+        }
+        chart.selectAll("dot")
+        .data(labels)
+      .enter().append("circle")
+      .on('mouseover', that.tip.show)
+          .on('mouseout', that.tip.hide)
+          .attr("r", 3.5)
+          .attr("cx", function(d, i) { return x(that.period[i]);})
+          .attr("cy", function(d) { return y(d.value); })
+          .attr('class', 'dot')
+          .attr('fill', function() {return that.color(i); } )
+          .attr('stroke', function() { return that.color(i); } );
+      
+      
+        
+      return d;
+
+    }
+
+    chart.selectAll('dots')
+      .data(this.data).enter()
+      .append('g')
+
+    .each(addDots);
 
   };
 
